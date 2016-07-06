@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <title>Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="../../assets/highlight.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <section class="nav-content">
+        <header>Content:</header>
+            <ul>
+<li><a href="../../index.html">Doctor Mark Down</a>
+<ul>
+<li><a href="../backend/index.html">Backend</a>
+</li>
+
+<li><a href="../bin/index.html">BIN / User input</a>
+</li>
+
+<li><a href="../frontend/index.html">Frontend</a>
+</li>
+
+<li><a href="index.html">File System Tools</a>
+</li>
+
+<li><a href="../../template/index.html">Creating Custom Template</a>
+</li>
+</ul></li>
+</ul>
+    </section>
+  </nav>
+  <main class="main">
+    <h1 id="file-system-tools">File System Tools</h1>
+<p>File system tolls helps with resolving all source files that should be compile.
+This is the most important weapon of Doctor Mark Downt.</p>
+<p>Based on <code>--files</code> and <code>--recursive</code> options.
+These tools walks files and build datastructure which is then used for loading all source files and setting paths during compilation.
+Location of files is significant for output structure.</p>
+<h2 id="non-recursice-mode">Non-Recursice Mode</h2>
+<p>In non recursive mode all <code>--files</code> are grabed from folder where comand is runned.
+This mode do not provide <code>{{{navigation}}}</code> and will output only one html file (and some assets).
+However <code>{{menu}}</code> is generated based on headline structure of files passed in.
+This mode is usually good for small descriptions of project.</p>
+<h2 id="recursive-mode">Recursive Mode</h2>
+<p>When <code>--recursive</code> or <code>-r</code> is passed whole structure (beside <code>--igonere</code> / <code>-i</code> directories) is walked and all files listed in <code>--files</code> option are found.
+The result is datastructure containing all valid files. It&#39;s <em>not</em> a problem if there is missing hit on any level - this is resolved during this step.
+Result of this mode will be documentation structured the same way as where files was found.
+Previous hits in every branch are significant for lavels in menu. Anyway structure of output is still the same as location in source.
+This means file can be on different lavel in fs as it is in menu. This guarantees links will be same between html and source and still it&#39;s
+not required to make menu level for irelevant filesystem levels (Think about Java:D).
+This mode is usable when you want to make larger documentation - document every module or resource group you possibly have.</p>
+
+  </main>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <title>Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="../../assets/highlight.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <section class="nav-content">
+        <header>Content:</header>
+            <ul>
+<li><a href="../../index.html">Doctor Mark Down</a>
+<ul>
+<li><a href="index.html">Backend</a>
+</li>
+
+<li><a href="../bin/index.html">BIN / User input</a>
+</li>
+
+<li><a href="../frontend/index.html">Frontend</a>
+</li>
+
+<li><a href="../filesystem/index.html">File System Tools</a>
+</li>
+
+<li><a href="../../template/index.html">Creating Custom Template</a>
+</li>
+</ul></li>
+</ul>
+    </section>
+  </nav>
+  <main class="main">
+    <h1 id="backend">Backend</h1>
+<p>Default backend is <a href="https://github.com/wycats/handlebars.js/">Handlebars</a> templating system.
+However there is already an abstraction layer for creating other backend even no other is implemented right now.
+If you&#39;re interested in writing support for different temple engine you can open issue and submit pull request with
+implementation of your favorite one.</p>
+<p>There might be different output formats support besides HTML in the future.
+However this will probably require deeper changes in compilation process since content is now compiled to HTML
+in frontend module. It will be nice to have better solution in future. Anyway this approach made it easy to
+reuse backend from <a href="https://github.com/chjj/marked">Marked</a> compiler which made whole intitial implementation much easier.</p>
+
+  </main>
+</body>
+</html>

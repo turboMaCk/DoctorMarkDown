@@ -1,0 +1,44 @@
+{
+  "name": "doctor-mark-down",
+  "version": "0.0.1",
+  "description": "Markdown to HTML documentation compiler which you don't know about.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/typescript/bin/tsc ./spec/all-spec.ts --outDir ./spec/compiled && ./node_modules/jasmine/bin/jasmine.js",
+    "build": "./node_modules/typescript/bin/tsc ./lib/bin/docmd.ts --outDir ./dist --pretty",
+    "start": "npm run build && ./bin/docmd --output-folder tmp --recursive --files README.md CONTRIBUTING.md LICENSE",
+    "doc": "./bin/docmd --recursive --files README.md CONTRIBUTING.md LICENSE"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/turboMaCk/DoctorMarkDown.git"
+  },
+  "keywords": [
+    "documentation",
+    "doc",
+    "mark",
+    "down",
+    "generator"
+  ],
+  "author": "Marek Fajkus <marek.faj@gmail.com>",
+  "license": "MIT",
+  "bin": {
+    "docmd": "bin/docmd"
+  },
+  "bugs": {
+    "url": "https://github.com/turboMaCk/DoctorMarkDown/issues"
+  },
+  "homepage": "https://github.com/turboMaCk/DoctorMarkDown#readme",
+  "dependencies": {
+    "handlebars": "^4.0.5",
+    "highlight.js": "^9.5.0",
+    "marked": "^0.3.5",
+    "mkdirp": "^0.5.1",
+    "ncp": "^2.0.0",
+    "thepessimist": "0.1.0"
+  },
+  "devDependencies": {
+    "jasmine": "^2.4.1",
+    "typescript": "^1.8.10"
+  }
+}
