@@ -22,7 +22,9 @@
   ],
   "author": "Marek Fajkus <marek.faj@gmail.com>",
   "license": "GPL-2.0",
-  "bin": "bin/docmd",
+  "bin": {
+    "docmd": "bin/docmd"
+  },
   "bugs": {
     "url": "https://github.com/turboMaCk/DoctorMarkDown/issues"
   },
