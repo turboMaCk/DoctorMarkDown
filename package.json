@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/typescript/bin/tsc ./spec/all-spec.ts --outDir ./spec/compiled && ./node_modules/jasmine/bin/jasmine.js",
-    "build": "./node_modules/typescript/bin/tsc ./lib/bin/docmd.ts --outDir ./dist --pretty"
+    "build": "./node_modules/typescript/bin/tsc ./lib/bin/docmd.ts --outDir ./dist --pretty",
+    "start": "npm run build && ./bin/docmd"
   },
   "repository": {
     "type": "git",

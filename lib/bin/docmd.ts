@@ -9,7 +9,7 @@ import ncp = require('ncp');
 
 export default function(process) {
     const def = {
-        file: 'README.md',
+        files: ['README.md'],
         outputFolder: 'documentation'
     };
 
@@ -18,12 +18,19 @@ export default function(process) {
 
     const template = fs.readFileSync('./template/default/index.hbs', 'utf8');
     const compile = base(settings, template);
+
     mkdirp(`./${settings.outputFolder}`, function (err) {
         if (err) {
             return console.error(err);
         };
         const file : string = `./${settings.outputFolder}/index.html`;
-        const md = fs.readFileSync(settings.file, 'utf8');
+
+        let md : string = '';
+        settings.files.forEach((fileName) => {
+            const fileContent : string = fs.readFileSync(fileName, 'utf8');
+            md += `${fileContent}\n`;
+        });
+
         fs.writeFileSync(file, compile(md), 'utf8')
         console.log(`File ${file} was created`);
     });
