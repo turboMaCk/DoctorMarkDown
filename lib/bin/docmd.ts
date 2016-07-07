@@ -13,8 +13,13 @@ export default function(process) {
         outputFolder: 'documentation'
     };
 
+    const shortcuts = {
+        f: 'files',
+        o: 'outputFolder'
+    }
+
     // parse settings
-    const settings = thePessimist(def, process.argv);
+    const settings = thePessimist(def, process.argv, shortcuts);
 
     const template = fs.readFileSync('./template/default/index.hbs', 'utf8');
     const compile = base(settings, template);
@@ -27,6 +32,7 @@ export default function(process) {
 
         let md : string = '';
         settings.files.forEach((fileName) => {
+            console.log(`File ${fileName} loaded sucessfully`);
             const fileContent : string = fs.readFileSync(fileName, 'utf8');
             md += `${fileContent}\n`;
         });
