@@ -7,11 +7,17 @@ import fs = require('fs');
 import mkdirp = require('mkdirp');
 import ncp = require('ncp');
 
+const dirArray : string[] = __dirname.split('/');
+// remove dist/lib/bin/
+['dist', 'lib', 'bin'].forEach(dir => dirArray.pop());
+const baseDir : string = dirArray.join('/');
+
 export const defaultSettings = {
     skipFirstHeadline: false,
     files: ['README.md'],
     outputFolder: 'documentation',
     depth: '6',
+    template: `${baseDir}/template/default`
 };
 
 export default function(process) {
@@ -19,13 +25,14 @@ export default function(process) {
         s: 'skipFirstHeadline',
         f: 'files',
         o: 'outputFolder',
-        d: 'depth'
+        d: 'depth',
+        t: 'templateDir'
     }
 
     // parse settings
     const settings = thePessimist(defaultSettings, process.argv, shortcuts);
 
-    const template = fs.readFileSync('./template/default/index.hbs', 'utf8');
+    const template = fs.readFileSync(`${settings.template}/index.hbs`, 'utf8');
     const compile = base(settings, template);
 
     mkdirp(`./${settings.outputFolder}`, function (err) {
