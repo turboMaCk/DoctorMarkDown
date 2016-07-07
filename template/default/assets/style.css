@@ -27,43 +27,46 @@ a:visited {
 }
 
 .nav {
-    width: 300px;
+    position: fixed;
     top: 0;
     bottom: 0;
-    position: fixed;
+    width: 300px;
+    padding: 50px 0;
     overflow: hidden;
     background: #ffffff;
 }
 
-.nav hgroup {
+.nav header {
     padding: 20px;
-}
-
-.nav hgroup h1 {
-    font-size: 30px;
-    margin-bottom: 5px;
-}
-
-.nav hgroup h2 {
+    font-size: 25px;
     color: #a7a7a7;
-    margin-top: 5px;
-}
-
-.nav h3 {
-    padding: 0 20px;
 }
 
 .nav ul {
     list-style: none;
     padding: 0;
-    margin: 20px 0;
+    margin: 0;
+    font-size: 20px;
+}
+
+.nav ul ul {
+    margin-left: 10px;
+    font-size: .9em;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #a7a7a7;
 }
 
 .nav a {
     display: block;
-    padding: 10px 20px;
+    padding: 5px 20px;
     text-decoration: none;
-    font-size: 20px;
 }
 
 .nav a:hover {
@@ -88,13 +91,4 @@ main h1 {
 .main h2 {
     margin-top: 50px;
     border-bottom: 2px solid #e4e4e2;
-}
-
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 20px;
-    text-align: center;
-    box-sizing: border-box;
 }
