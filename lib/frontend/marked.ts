@@ -25,7 +25,7 @@ const frontend : Frontend = {
         return marked.parser(tokens);
     },
     parseMenuTree(options, tokens : Token[]) {
-        return parseTree(options, tokens.filter(i => i.type == 'heading'));
+        return parseTree(options, tokens.filter(i => i.type == 'heading' && i.depth <= parseInt(options.depth)));
     }
 };
 

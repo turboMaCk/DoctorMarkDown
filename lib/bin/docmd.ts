@@ -7,14 +7,14 @@ import fs = require('fs');
 import mkdirp = require('mkdirp');
 import ncp = require('ncp');
 
-export default function(process) {
-    const def = {
-        skipFirstHeadline: false,
-        files: ['README.md'],
-        outputFolder: 'documentation',
-        depth: '3'
-    };
+export const defaultSettings = {
+    skipFirstHeadline: false,
+    files: ['README.md'],
+    outputFolder: 'documentation',
+    depth: '6',
+};
 
+export default function(process) {
     const shortcuts = {
         s: 'skipFirstHeadline',
         f: 'files',
@@ -23,7 +23,7 @@ export default function(process) {
     }
 
     // parse settings
-    const settings = thePessimist(def, process.argv, shortcuts);
+    const settings = thePessimist(defaultSettings, process.argv, shortcuts);
 
     const template = fs.readFileSync('./template/default/index.hbs', 'utf8');
     const compile = base(settings, template);
