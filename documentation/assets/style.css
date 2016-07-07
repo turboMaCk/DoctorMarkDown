@@ -1,0 +1,100 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: lato;
+    font-size: 16px;
+    background: #f3f9f9;
+    height: 100%;
+    line-height: 1.5em;
+}
+
+code {
+    background: #e4e4e2;
+    font-size: 14px;
+}
+
+pre {
+    display: block;
+    background: #e4e4e2;
+    padding: 10px;
+    overflow: scroll;
+}
+
+a,
+a:visited {
+    color: rgb(1, 150, 207);
+}
+
+.nav {
+    width: 300px;
+    top: 0;
+    bottom: 0;
+    position: fixed;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.nav hgroup {
+    padding: 20px;
+}
+
+.nav hgroup h1 {
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.nav hgroup h2 {
+    color: #a7a7a7;
+    margin-top: 5px;
+}
+
+.nav h3 {
+    padding: 0 20px;
+}
+
+.nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.nav a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.nav a:hover {
+    text-decoration: underline;
+}
+
+.main {
+    position: relative;
+    margin: 0 5px 0 320px;
+    padding: 30px 30px 50px 30px;
+    max-width: 1000px;
+    font-size: 18px;
+    background: #ffffff;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+main h1 {
+    margin: 40px 0;
+}
+
+.main h2 {
+    margin-top: 50px;
+    border-bottom: 2px solid #e4e4e2;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    box-sizing: border-box;
+}

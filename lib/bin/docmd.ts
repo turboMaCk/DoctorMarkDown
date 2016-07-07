@@ -1,20 +1,43 @@
 /// <reference path="../../header_files/node.d.ts" />
+/// <reference path="../../header_files/mkdirp.d.ts" />
+/// <reference path="../../header_files/ncp.d.ts" />
 import base from '../doctor-mark-down';
 import thePessimist from 'thepessimist';
 import fs = require('fs');
+import mkdirp = require('mkdirp');
+import ncp = require('ncp');
 
-export default function(cliArgs) {
+export default function(process) {
     const def = {
         file: 'README.md',
-        output: 'index.html'
+        outputFolder: 'documentation'
     };
 
-    const settings = thePessimist(def, cliArgs);
+    // parse settings
+    const settings = thePessimist(def, process.argv);
 
     const template = fs.readFileSync('./template/default/index.hbs', 'utf8');
     const compile = base(settings, template);
+    mkdirp(`./${settings.outputFolder}`, function (err) {
+        if (err) {
+            return console.error(err);
+        };
+        const file : string = `./${settings.outputFolder}/index.html`;
+        const md = fs.readFileSync(settings.file, 'utf8');
+        fs.writeFileSync(file, compile(md), 'utf8')
+        console.log(`File ${file} was created`);
+    });
 
-    const md = fs.readFileSync(settings.file, 'utf8');
-    fs.writeFileSync('./' + settings.output, compile(md), 'utf8')
-    console.log('File created');
+    // copy assets
+    mkdirp(`./${settings.outputFolder}/assets`, function (err) {
+        if (err) {
+            return console.error(err);
+        };
+        ncp.ncp('template/default/assets', `./${settings.outputFolder}/assets`, function (err) {
+            if (err) {
+                return console.error(err);
+            }
+            console.log('Assets copied sucesfully');
+        });
+    });
 };
