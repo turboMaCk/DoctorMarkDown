@@ -26,7 +26,7 @@ export default function(process) {
         f: 'files',
         o: 'outputFolder',
         d: 'depth',
-        t: 'templateDir'
+        t: 'template'
     }
 
     // parse settings
