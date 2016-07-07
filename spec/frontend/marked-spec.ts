@@ -1,4 +1,4 @@
-///<reference path="../jasmine.d.ts"/>
+///<reference path="../../header_files/jasmine.d.ts"/>
 
 import marked from '../../lib/frontend/marked';
 import getMock from '../helpers/get-mock';

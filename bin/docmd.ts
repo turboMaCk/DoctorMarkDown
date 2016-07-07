@@ -1,4 +1,4 @@
-/// <reference path="../spec/node.d.ts" />
+/// <reference path="../header_files/node.d.ts" />
 import base from '../lib/doctor-mark-down';
 import thePessimist from 'thepessimist';
 import fs = require('fs');

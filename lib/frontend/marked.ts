@@ -1,5 +1,5 @@
-///<reference path="../d/highlight.d.ts"/>
-///<reference path="../d/marked.d.ts"/>
+///<reference path="../../header_files/highlight.d.ts"/>
+///<reference path="../../header_files/marked.d.ts"/>
 
 import marked = require('marked');
 import highlight = require('highlight.js');

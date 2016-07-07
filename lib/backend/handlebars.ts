@@ -1,4 +1,4 @@
-///<reference path="../d/handlebars.d.ts"/>
+///<reference path="../../header_files/handlebars.d.ts"/>
 import Handlebars = require('handlebars');
 import BackendFactory, { Data, ParserFactory, Parser, Backend } from './base';
 

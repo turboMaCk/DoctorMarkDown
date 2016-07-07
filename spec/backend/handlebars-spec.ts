@@ -1,4 +1,4 @@
-///<reference path="../jasmine.d.ts"/>
+///<reference path="../../header_files/jasmine.d.ts"/>
 
 import handlebars from '../../lib/backend/handlebars';
 
