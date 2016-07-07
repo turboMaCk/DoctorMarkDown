@@ -9,13 +9,17 @@ import ncp = require('ncp');
 
 export default function(process) {
     const def = {
+        skipFirstHeadline: false,
         files: ['README.md'],
-        outputFolder: 'documentation'
+        outputFolder: 'documentation',
+        depth: '3'
     };
 
     const shortcuts = {
+        s: 'skipFirstHeadline',
         f: 'files',
-        o: 'outputFolder'
+        o: 'outputFolder',
+        d: 'depth'
     }
 
     // parse settings
