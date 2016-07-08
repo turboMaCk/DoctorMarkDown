@@ -12,13 +12,15 @@ export interface Settings {
 export default function (settings, template : string) {
     const compile = handlebars(settings, template);
 
-    return (raw : string) : string => {
+    return (raw : string, assetsPath? : string) : string => {
+        assetsPath = assetsPath || 'assets';
         const parser = marked(settings, raw);
         const nav = menu(settings, parser.parseMenuTree());
 
         return compile({
             menu: nav,
-            content: parser.parseContent()
+            content: parser.parseContent(),
+            assetsPath: assetsPath
         });
     };
 };

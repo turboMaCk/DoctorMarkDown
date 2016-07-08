@@ -24,6 +24,12 @@ export const defaultSettings = {
     ignore: ['node_modules', '.git', 'documentation', 'bower_components']
 };
 
+function assetsPath(pathArr : string[]) : string {
+    const relevant : string[] = pathArr.slice(1);
+    const path = relevant ? relevant.map(() => '..').join('/') + '/assets' : 'assets';
+    return path;
+}
+
 export default function(process) {
     const shortcuts = {
         r: 'recursive',
@@ -64,7 +70,7 @@ export default function(process) {
                     console.log(`File ${fileName} loaded sucessfully`);
                 });
 
-                fs.writeFileSync(file, compile(md), 'utf8')
+                fs.writeFileSync(file, compile(md, assetsPath(pathArr)), 'utf8')
                 console.log(`File ${file} was created`);
 
                 dirs.forEach((dir) => {
