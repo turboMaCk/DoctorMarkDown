@@ -6,28 +6,34 @@ import thePessimist from 'thepessimist';
 import fs = require('fs');
 import mkdirp = require('mkdirp');
 import ncp = require('ncp');
+import fsHelper from '../helpers/fs';
 
 const dirArray : string[] = __dirname.split('/');
 // remove dist/lib/bin/
 ['dist', 'lib', 'bin'].forEach(dir => dirArray.pop());
 const baseDir : string = dirArray.join('/');
 
+
 export const defaultSettings = {
+    recursive: true,
     skipFirstHeadline: false,
     files: ['README.md'],
     outputFolder: 'documentation',
     depth: '6',
-    template: `${baseDir}/template/default`
+    template: `${baseDir}/template/default`,
+    ignore: ['node_modules', '.git', 'documentation', 'bower_components']
 };
 
 export default function(process) {
     const shortcuts = {
+        r: 'recursive',
         s: 'skipFirstHeadline',
         f: 'files',
         o: 'outputFolder',
         d: 'depth',
-        t: 'template'
-    }
+        t: 'template',
+        i: 'ignore'
+    };
 
     // parse settings
     const settings = thePessimist(defaultSettings, process.argv, shortcuts);
@@ -39,17 +45,56 @@ export default function(process) {
         if (err) {
             return console.error(err);
         };
-        const file : string = `./${settings.outputFolder}/index.html`;
 
-        let md : string = '';
-        settings.files.forEach((fileName) => {
-            console.log(`File ${fileName} loaded sucessfully`);
-            const fileContent : string = fs.readFileSync(fileName, 'utf8');
-            md += `${fileContent}\n`;
-        });
+        function generateRecursive(res) {
+            const pathArr : string[] = res.path.split('/');
+            const dir : string = pathArr.slice(1, pathArr.length).join('/');
+            const fullPath : string = dir ? settings.outputFolder + '/' + dir : settings.outputFolder;
+            const file : string = `./${fullPath}/index.html`;
 
-        fs.writeFileSync(file, compile(md), 'utf8')
-        console.log(`File ${file} was created`);
+            mkdirp(fullPath, function (err) {
+                const files = res.children.filter(i => !i.children);
+                const dirs = res.children.filter(i => !!i.children);
+
+                let md : string = '';
+                files.forEach((file) => {
+                    const fileName : string = file.path;
+                    const fileContent : string = fs.readFileSync(fileName, 'utf8');
+                    md += `${fileContent}\n`;
+                    console.log(`File ${fileName} loaded sucessfully`);
+                });
+
+                fs.writeFileSync(file, compile(md), 'utf8')
+                console.log(`File ${file} was created`);
+
+                dirs.forEach((dir) => {
+                    generateRecursive(dir);
+                });
+            });
+        }
+
+        if (settings.recursive) {
+            fsHelper(settings, (err, res) => {
+                if (err) {
+                    return console.error(err);
+                }
+                generateRecursive(res)
+            });
+        } else {
+
+            const file : string = `./${settings.outputFolder}/index.html`;
+
+            let md : string = '';
+            settings.files.forEach((fileName) => {
+                const fileContent : string = fs.readFileSync(fileName, 'utf8');
+                md += `${fileContent}\n`;
+                console.log(`File ${fileName} loaded sucessfully`);
+            });
+
+            fs.writeFileSync(file, compile(md), 'utf8')
+            console.log(`File ${file} was created`);
+        }
+
     });
 
     // copy assets
