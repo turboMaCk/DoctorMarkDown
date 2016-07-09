@@ -26,7 +26,7 @@ export const defaultSettings = {
 
 function assetsPath(pathArr : string[]) : string {
     const relevant : string[] = pathArr.slice(1);
-    const path = relevant ? relevant.map(() => '..').join('/') + 'assets' : 'assets';
+    const path = relevant.length > 0 ? relevant.map(() => '..').join('/') + '/assets' : 'assets';
     return path;
 }
 
@@ -52,6 +52,27 @@ export default function(process) {
             return console.error(err);
         };
 
+        function navRelevant(dirs) {
+            let children = [];
+            dirs.forEach((dir) => { children = children.concat(dir.children) });
+            if (children.length == 0) { return [] };
+            const childFiles = children.filter(c => !c.children);
+            const childDirs = children.filter(c => c.children);
+            const withoutParent = childDirs.filter((dir) => {
+                childFiles.forEach((file) => {
+                    const directory = file.path.split('/');
+                    directory.pop();
+                    if (directory.join('/') == dir.path) {
+                        return false;
+                    };
+                });
+
+                return true;
+            });
+
+            return childFiles.concat(navRelevant(withoutParent));
+        }
+
         function generateRecursive(res, navTree) {
             const pathArr : string[] = res.path.split('/');
             const dir : string = pathArr.slice(1, pathArr.length).join('/');
@@ -67,13 +88,19 @@ export default function(process) {
                     const fileName : string = file.path;
                     const fileContent : string = fs.readFileSync(fileName, 'utf8');
                     md += `${fileContent}\n`;
-                    console.log(`File ${fileName} loaded sucessfully`);
+                    // console.log(`File ${fileName} loaded sucessfully`);
                 });
 
                 const parsed = compiler(md, assetsPath(pathArr), navTree);
+                if (files.length > 0) {
+                    const parseForNav = navRelevant(dirs);
+                    console.log(file);
+                    console.log(parseForNav);
 
-                fs.writeFileSync(file, parsed.compile(), 'utf8')
-                console.log(`File ${file} was created`);
+
+                    fs.writeFileSync(file, parsed.compile(), 'utf8')
+                    // console.log(`File ${file} was created`);
+                }
 
                 dirs.forEach((dir) => {
                     generateRecursive(dir, parsed.getNavTree());

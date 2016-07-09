@@ -30,7 +30,6 @@ const frontend : Frontend = {
     },
     parseNavTree(options, navTree : Node[], tokens : Token[]) : Node[] {
         const firstHeading = tokens.filter(i => i.type == 'heading')[0];
-        console.log('heading', firstHeading);
         return pushToTree(options, navTree, firstHeading);
     }
 };

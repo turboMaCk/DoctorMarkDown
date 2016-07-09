@@ -56,7 +56,7 @@ export default function (frontend : Frontend) : ParserFactory {
         };
 
         const parseNavTree = () : Node[] => {
-            return frontend.parseNavTree(options, getTokens(), navTree);
+            return frontend.parseNavTree(options, navTree, getTokens());
         }
 
         return {
@@ -97,6 +97,10 @@ export function parseTree(options, tokens : Token[]) : Node[] {
 }
 
 export function pushToTree(options, tree : Node[], token : Token) : Node[] {
+    if (!token) return tree;
+    if (tree.length < 1) {
+        return [createNodeFromToken(token)];
+    }
     const deeper = tree.filter(i => i.children.length > 0);
     if (deeper.length > 0) {
         tree.concat(pushToTree(options, deeper[0].children, token));
