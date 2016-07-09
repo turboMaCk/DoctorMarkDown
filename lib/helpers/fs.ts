@@ -20,6 +20,12 @@ function Tree(settings) {
                 return done(null, results);
             }
 
+            settings.files.forEach((fileName) => {
+                if (list.filter(f => f == fileName)[0]) {
+                    results.children.push({ path: dir + "/" + fileName });
+                }
+            });
+
             list.forEach((file) => {
                 fs.stat(dir + '/' + file, (err, stat) => {
                     // is is derectory
@@ -43,9 +49,9 @@ function Tree(settings) {
                         });
                     // push files
                     } else {
-                        if (settings.files.filter(name => name == file).length > 0) {
-                            results.children.push({"path": dir + "/" + file});
-                        }
+                        // if (settings.files.filter(name => name == file).length > 0) {
+                        //     results.children.push({ path: dir + "/" + file });
+                        // }
 
                         if (!--pending) {
                             done(null, results);
