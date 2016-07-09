@@ -106,5 +106,4 @@ export default describe('marked frontend', () => {
             expect(subject.parseMenuTree()).toEqual(menuTree);
         });
     });
-
 });

@@ -3,6 +3,7 @@ import { NodeItem, Node } from './menu';
 export interface Token {
     depth : number;
     text : string;
+    type : string;
 };
 
 export interface Parser {
@@ -31,8 +32,9 @@ function idFromText(text : string) : string {
 }
 
 // @Private Node constructor
-function createNodeFromToken(token : Token) : Node {
-    return { item: { text: token.text, href: `#${idFromText(token.text)}`, depth: token.depth },
+function createNodeFromToken(token : Token, href? : string) : Node {
+    href = href || `#${idFromText(token.text)}`;
+    return { item: { text: token.text, href: href, depth: token.depth },
              children: [] };
 }
 
@@ -94,16 +96,12 @@ export function parseTree(options, tokens : Token[]) : Node[] {
     return tree;
 }
 
-function pushDeep(tree : Node[], token : Token) : Node[] {
+export function pushToTree(options, tree : Node[], token : Token) : Node[] {
     const deeper = tree.filter(i => i.children.length > 0);
     if (deeper.length > 0) {
-        return pushDeep(deeper[0].children, token);
+        tree.concat(pushToTree(options, deeper[0].children, token));
+        return tree;
     }
     tree.push(createNodeFromToken(token));
-
     return tree;
-}
-
-export function pushToTree(options, tree : Node[], token : Token) : Node[] {
-    return pushDeep(tree, token);
 }
