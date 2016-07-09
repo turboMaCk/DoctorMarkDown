@@ -1,6 +1,6 @@
 ///<reference path="../../header_files/jasmine.d.ts"/>
 
-import { pushDepthToTree, Token } from '../../lib/frontend/base';
+import { pushDepthToTree, Token, createNode } from '../../lib/frontend/base';
 
 export default describe('parseNavTree', () => {
     describe('flat tree', () => {
@@ -54,4 +54,9 @@ export default describe('parseNavTree', () => {
             expect(pushDepthToTree({}, initialTree, tokens)).toEqual(exp)
         });
     });
+
+    it('create node', () => {
+        const node = { item: { text: 'text', href: '../app', depth: 1 }, children: [] };
+        expect(createNode('text', '../app')).toEqual(node);
+    })
 });

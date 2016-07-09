@@ -33,7 +33,13 @@ function idFromText(text : string) : string {
     return text.toLowerCase().replace(/[^\w]+/g, '-');
 }
 
-// @Private Node constructor
+// @Public Node basic constructor
+export function createNode(text : string, href : string) {
+    return { item: { text: text, href: href, depth: 1 },
+             children: [] };
+}
+
+// @Private Node from Token constructor
 function createNodeFromToken(token : Token, href? : string) : Node {
     href = href || `#${idFromText(token.text)}`;
     return { item: { text: token.text, href: href, depth: token.depth },
