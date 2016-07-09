@@ -28,34 +28,22 @@ function Tree(settings) {
 
             list.forEach((file) => {
                 fs.stat(dir + '/' + file, (err, stat) => {
-                    // is is derectory
                     if (stat && stat.isDirectory()) {
-                        if (settings.ignore.filter(name => name == file).length > 0) {
-                            if (!--pending) {
-                                done(null, results);
-                            }
+                        // check if is ignored
+                        if (settings.ignore.filter(name => name == file).length == 0) {
+                            return tree(dir + '/' + file, (err, res) => {
+                                if (res.children.length > 0) {
+                                    results.children.push(res);
+                                }
 
-                            return;
+                                if (!--pending) {
+                                    done(null, results);
+                                }
+                            });
                         }
-
-                        tree(dir + '/' + file, (err, res) => {
-                            if (res.children.length > 0) {
-                                results.children.push(res);
-                            }
-
-                            if (!--pending) {
-                                done(null, results);
-                            }
-                        });
-                    // push files
-                    } else {
-                        // if (settings.files.filter(name => name == file).length > 0) {
-                        //     results.children.push({ path: dir + "/" + file });
-                        // }
-
-                        if (!--pending) {
-                            done(null, results);
-                        }
+                    }
+                    if (!--pending) {
+                        done(null, results);
                     }
                 });
             });
