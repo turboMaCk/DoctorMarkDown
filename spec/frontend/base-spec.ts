@@ -1,6 +1,6 @@
 ///<reference path="../../header_files/jasmine.d.ts"/>
 
-import { pushToTree, Token } from '../../lib/frontend/base';
+import { pushDepthToTree, Token } from '../../lib/frontend/base';
 
 export default describe('parseNavTree', () => {
     describe('flat tree', () => {
@@ -13,11 +13,12 @@ export default describe('parseNavTree', () => {
         it('should push as last', () => {
             const exp = [
                 { item: { text: 'first', href: "", depth: 1 }, children: [] },
-                { item: { text: 'second', href: "", depth: 1 }, children: [] },
-                { item: { text: 'third', href: "#third", depth: 1 }, children: [] }
+                { item: { text: 'second', href: "", depth: 1 }, children: [
+                    { item: { text: 'third', href: "#third", depth: 1 }, children: [] }
+                ] },
             ];
 
-            expect(pushToTree({}, initialTree, token)).toEqual(exp)
+            expect(pushDepthToTree({}, initialTree, token)).toEqual(exp)
         });
     });
 
@@ -42,14 +43,15 @@ export default describe('parseNavTree', () => {
                     { item: { text: 'deep', href: "", depth: 1 }, children: [] },
                     { item: { text: 'deep', href: "", depth: 1 }, children: [] },
                     { item: { text: 'deep', href: "", depth: 1 }, children: [
-                        { item: { text: 'deeper', href: "", depth: 1 }, children: [] },
-                        { item: { text: 'new' , href: '#new', depth: 1}, children: [] }
+                        { item: { text: 'deeper', href: "", depth: 1 }, children: [
+                            { item: { text: 'new' , href: '#new', depth: 1}, children: [] }
+                        ] }
                     ] },
                 ] },
                 { item: { text: 'third', href: "", depth: 1 }, children: [] },
             ];
 
-            expect(pushToTree({}, initialTree, token)).toEqual(exp)
+            expect(pushDepthToTree({}, initialTree, token)).toEqual(exp)
         });
     });
 });

@@ -96,16 +96,16 @@ export function parseTree(options, tokens : Token[]) : Node[] {
     return tree;
 }
 
-export function pushToTree(options, tree : Node[], token : Token) : Node[] {
+export function pushDepthToTree(options, tree : Node[], token : Token) : Node[] {
     if (!token) return tree;
     if (tree.length < 1) {
         return [createNodeFromToken(token)];
     }
     const deeper = tree.filter(i => i.children.length > 0);
     if (deeper.length > 0) {
-        tree.concat(pushToTree(options, deeper[0].children, token));
+        tree.concat(pushDepthToTree(options, deeper[0].children, token));
         return tree;
     }
-    tree.push(createNodeFromToken(token));
+    tree[tree.length -1].children.push(createNodeFromToken(token));
     return tree;
 }
