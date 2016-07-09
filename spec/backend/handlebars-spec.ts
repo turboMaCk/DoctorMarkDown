@@ -7,7 +7,9 @@ export default describe('Handlebars backend', () => {
         const template = '{{{menu}}}<br>{{{content}}}';
         const data = {
             menu: "MENU",
-            content: "CONTENT"
+            content: "CONTENT",
+            navigation: '',
+            assetsPath: ''
         };
 
         const compile = handlebars({}, template);

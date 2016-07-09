@@ -1,5 +1,5 @@
 import marked from './frontend/marked';
-import menu from './frontend/menu';
+import menu, { Node } from './frontend/menu';
 import handlebars from './backend/handlebars';
 
 export interface Settings {
@@ -9,18 +9,31 @@ export interface Settings {
     depth: string;
 }
 
+export interface Compiler {
+    compile() : string;
+    getNavTree() : Node[];
+}
+
 export default function (settings, template : string) {
     const compile = handlebars(settings, template);
 
-    return (raw : string, assetsPath? : string) : string => {
+    return (raw : string, assetsPath? : string, navTree? : Node[]) : Compiler => {
+        navTree = navTree || [];
         assetsPath = assetsPath || 'assets';
-        const parser = marked(settings, raw);
-        const nav = menu(settings, parser.parseMenuTree());
+        const parser = marked(settings, raw, navTree);
 
-        return compile({
-            menu: nav,
-            content: parser.parseContent(),
-            assetsPath: assetsPath
-        });
+        return {
+            compile() : string {
+                return compile({
+                    menu: menu(settings, parser.parseMenuTree()),
+                    content: parser.parseContent(),
+                    assetsPath: assetsPath,
+                    navigation: menu(settings, parser.parseNavTree())
+                });
+            },
+            getNavTree() : Node[] {
+                return parser.parseNavTree();
+            }
+        }
     };
 };

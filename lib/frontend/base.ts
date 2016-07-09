@@ -1,13 +1,4 @@
-import { NodeItem as MenuNodeItem, Node as MenuNode } from './menu';
-
-export interface NodeItem extends MenuNodeItem {
-    depth : number;
-};
-
-export interface Node extends MenuNode {
-    item : NodeItem;
-    children : Node[];
-};
+import { NodeItem, Node } from './menu';
 
 export interface Token {
     depth : number;
@@ -18,17 +9,19 @@ export interface Parser {
     getTokens() : any;
     parseMenuTree() : Node[];
     parseContent() : string;
+    parseNavTree() : Node[];
 }
 
 export interface Frontend {
     tokenize(options, raw : string) : any;
     parseContent(options, tokens : any) : string;
     parseMenuTree(options, tokens : Token[]) : Node[];
+    parseNavTree(options, tree : Node[], tokens : Token[]) : Node[];
 };
 
 
 export interface ParserFactory extends Function {
-    (options, raw : string) : Parser
+    (options, raw : string, navTree) : Parser
 }
 
 // @Private function for generating ids
@@ -45,7 +38,7 @@ function createNodeFromToken(token : Token) : Node {
 
 // @Public Main constructor
 export default function (frontend : Frontend) : ParserFactory {
-    return (options, raw : string) : Parser => {
+    return (options, raw : string, navTree) : Parser => {
         let tokenized;
 
         const getTokens = () : any => {
@@ -60,10 +53,15 @@ export default function (frontend : Frontend) : ParserFactory {
             return frontend.parseContent(options, getTokens());
         };
 
+        const parseNavTree = () : Node[] => {
+            return frontend.parseNavTree(options, getTokens(), navTree);
+        }
+
         return {
             getTokens: getTokens,
             parseMenuTree: parseMenuTree,
-            parseContent: parseContent
+            parseContent: parseContent,
+            parseNavTree: parseNavTree
         };
     }
 }
@@ -94,4 +92,18 @@ export function parseTree(options, tokens : Token[]) : Node[] {
     });
 
     return tree;
+}
+
+function pushDeep(tree : Node[], token : Token) : Node[] {
+    const deeper = tree.filter(i => i.children.length > 0);
+    if (deeper.length > 0) {
+        return pushDeep(deeper[0].children, token);
+    }
+    tree.push(createNodeFromToken(token));
+
+    return tree;
+}
+
+export function pushToTree(options, tree : Node[], token : Token) : Node[] {
+    return pushDeep(tree, token);
 }

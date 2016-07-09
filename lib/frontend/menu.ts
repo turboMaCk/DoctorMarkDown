@@ -1,6 +1,7 @@
 export interface NodeItem {
     text : string;
     href : string;
+    depth? : number;
 }
 
 export interface Node {

@@ -3,7 +3,8 @@
 
 import marked = require('marked');
 import highlight = require('highlight.js');
-import FrontendFactory, { parseTree, Frontend, ParserFactory, Token as BaseToken } from './base';
+import FrontendFactory, { parseTree, pushToTree, Frontend, ParserFactory, Token as BaseToken } from './base';
+import { Node } from './menu';
 
 // Setup code highlighting
 marked.setOptions({
@@ -26,6 +27,10 @@ const frontend : Frontend = {
     },
     parseMenuTree(options, tokens : Token[]) {
         return parseTree(options, tokens.filter(i => i.type == 'heading' && i.depth <= parseInt(options.depth)));
+    },
+    parseNavTree(options, navTree : Node[], tokens : Token[]) : Node[] {
+        const firstHeading = tokens.filter(i => i.type == 'heading')[0];
+        return pushToTree(options, navTree, firstHeading);
     }
 };
 

@@ -26,7 +26,7 @@ export const defaultSettings = {
 
 function assetsPath(pathArr : string[]) : string {
     const relevant : string[] = pathArr.slice(1);
-    const path = relevant ? relevant.map(() => '..').join('/') + '/assets' : 'assets';
+    const path = relevant ? relevant.map(() => '..').join('/') + 'assets' : 'assets';
     return path;
 }
 
@@ -45,14 +45,14 @@ export default function(process) {
     const settings = thePessimist(defaultSettings, process.argv, shortcuts);
 
     const template = fs.readFileSync(`${settings.template}/index.hbs`, 'utf8');
-    const compile = base(settings, template);
+    const compiler = base(settings, template);
 
     mkdirp(`./${settings.outputFolder}`, function (err) {
         if (err) {
             return console.error(err);
         };
 
-        function generateRecursive(res) {
+        function generateRecursive(res, navTree) {
             const pathArr : string[] = res.path.split('/');
             const dir : string = pathArr.slice(1, pathArr.length).join('/');
             const fullPath : string = dir ? settings.outputFolder + '/' + dir : settings.outputFolder;
@@ -70,11 +70,13 @@ export default function(process) {
                     console.log(`File ${fileName} loaded sucessfully`);
                 });
 
-                fs.writeFileSync(file, compile(md, assetsPath(pathArr)), 'utf8')
+                const parsed = compiler(md, assetsPath(pathArr), navTree);
+
+                fs.writeFileSync(file, parsed.compile(), 'utf8')
                 console.log(`File ${file} was created`);
 
                 dirs.forEach((dir) => {
-                    generateRecursive(dir);
+                    generateRecursive(dir, parsed.getNavTree());
                 });
             });
         }
@@ -84,7 +86,7 @@ export default function(process) {
                 if (err) {
                     return console.error(err);
                 }
-                generateRecursive(res)
+                generateRecursive(res, []);
             });
         } else {
 
@@ -97,7 +99,7 @@ export default function(process) {
                 console.log(`File ${fileName} loaded sucessfully`);
             });
 
-            fs.writeFileSync(file, compile(md), 'utf8')
+            fs.writeFileSync(file, compiler(md).compile(), 'utf8')
             console.log(`File ${file} was created`);
         }
 

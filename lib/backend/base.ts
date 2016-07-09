@@ -2,6 +2,7 @@ export interface Data {
     content : string;
     menu : string;
     assetsPath : string;
+    navigation : string;
 };
 
 export interface Backend extends Function {
