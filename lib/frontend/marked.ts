@@ -30,7 +30,11 @@ const frontend : Frontend = {
     },
     parseNavTree(options, navTree : Node[], tokens : Token[]) : Node[] {
         const firstHeading = tokens.filter(i => i.type == 'heading')[0];
-        return pushDepthToTree(options, navTree, firstHeading);
+        return pushDepthToTree(options, navTree, [firstHeading].filter(h => !!h));
+    },
+    getFileName(options, tokens : Token[]) : string {
+        const firstHeading = tokens.filter(i => i.type == 'heading')[0];
+        return firstHeading ? firstHeading.text : '';
     }
 };
 

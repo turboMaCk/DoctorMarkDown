@@ -11,6 +11,7 @@ export interface Parser {
     parseMenuTree() : Node[];
     parseContent() : string;
     parseNavTree() : Node[];
+    getFileName() : string;
 }
 
 export interface Frontend {
@@ -18,6 +19,7 @@ export interface Frontend {
     parseContent(options, tokens : any) : string;
     parseMenuTree(options, tokens : Token[]) : Node[];
     parseNavTree(options, tree : Node[], tokens : Token[]) : Node[];
+    getFileName(options, tokens : Token[]) : string;
 };
 
 
@@ -57,13 +59,18 @@ export default function (frontend : Frontend) : ParserFactory {
 
         const parseNavTree = () : Node[] => {
             return frontend.parseNavTree(options, navTree, getTokens());
-        }
+        };
+
+        const getFileName = () : string => {
+            return frontend.getFileName(options, getTokens());
+        };
 
         return {
             getTokens: getTokens,
             parseMenuTree: parseMenuTree,
             parseContent: parseContent,
-            parseNavTree: parseNavTree
+            parseNavTree: parseNavTree,
+            getFileName: getFileName
         };
     }
 }
@@ -96,16 +103,17 @@ export function parseTree(options, tokens : Token[]) : Node[] {
     return tree;
 }
 
-export function pushDepthToTree(options, tree : Node[], token : Token) : Node[] {
-    if (!token) return tree;
+export function pushDepthToTree(options, tree : Node[], tokens : Token[]) : Node[] {
+    if (!tokens || tokens.length == 0) return tree;
+    const nodes = tokens.map((token) => createNodeFromToken(token));
     if (tree.length < 1) {
-        return [createNodeFromToken(token)];
+        return nodes;
     }
     const deeper = tree.filter(i => i.children.length > 0);
     if (deeper.length > 0) {
-        tree.concat(pushDepthToTree(options, deeper[0].children, token));
+        tree.concat(pushDepthToTree(options, deeper[0].children, tokens));
         return tree;
     }
-    tree[tree.length -1].children.push(createNodeFromToken(token));
+    tree[tree.length -1].children = nodes;
     return tree;
 }

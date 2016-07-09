@@ -8,7 +8,7 @@ export default describe('parseNavTree', () => {
             { item: { text: 'first', href: "", depth: 1 }, children: [] },
             { item: { text: 'second', href: "", depth: 1 }, children: [] }
         ];
-        const token : Token = { text: 'third', type: "heading", depth: 1 };
+        const tokens : Token[] = [{ text: 'third', type: "heading", depth: 1 }];
 
         it('should push as last', () => {
             const exp = [
@@ -18,7 +18,7 @@ export default describe('parseNavTree', () => {
                 ] },
             ];
 
-            expect(pushDepthToTree({}, initialTree, token)).toEqual(exp)
+            expect(pushDepthToTree({}, initialTree, tokens)).toEqual(exp)
         });
     });
 
@@ -34,7 +34,7 @@ export default describe('parseNavTree', () => {
             ] },
             { item: { text: 'third', href: "", depth: 1 }, children: [] },
         ];
-        const token : Token = { text: 'new', type: "heading", depth: 1 };
+        const tokens : Token[] = [{ text: 'new', type: "heading", depth: 1 }];
 
         it('should push as last', () => {
             const exp = [
@@ -51,7 +51,7 @@ export default describe('parseNavTree', () => {
                 { item: { text: 'third', href: "", depth: 1 }, children: [] },
             ];
 
-            expect(pushDepthToTree({}, initialTree, token)).toEqual(exp)
+            expect(pushDepthToTree({}, initialTree, tokens)).toEqual(exp)
         });
     });
 });

@@ -106,4 +106,11 @@ export default describe('marked frontend', () => {
             expect(subject.parseMenuTree()).toEqual(menuTree);
         });
     });
+
+    it('get file name', () => {
+        const raw = getMock('s.md');
+        const subject = marked({}, raw, []);
+
+        expect(subject.getFileName()).toEqual('Main');
+    })
 });

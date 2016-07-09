@@ -97,7 +97,6 @@ export default function(process) {
                     console.log(file);
                     console.log(parseForNav);
 
-
                     fs.writeFileSync(file, parsed.compile(), 'utf8')
                     // console.log(`File ${file} was created`);
                 }
