@@ -6,7 +6,8 @@ import thePessimist from 'thepessimist';
 import fs = require('fs');
 import mkdirp = require('mkdirp');
 import ncp = require('ncp');
-import fsHelper from '../helpers/fs';
+import browser from '../filesystem/browser';
+import generateRecursive from '../filesystem/recursive';
 
 const dirArray : string[] = __dirname.split('/');
 // remove dist/lib/bin/
@@ -23,12 +24,6 @@ export const defaultSettings = {
     template: `${baseDir}/template/default`,
     ignore: ['node_modules', '.git', 'documentation', 'bower_components']
 };
-
-function assetsPath(pathArr : string[]) : string {
-    const relevant : string[] = pathArr.slice(1);
-    const path = relevant.length > 0 ? relevant.map(() => '..').join('/') + '/assets' : 'assets';
-    return path;
-}
 
 export default function(process) {
     const shortcuts = {
@@ -47,74 +42,19 @@ export default function(process) {
     const template = fs.readFileSync(`${settings.template}/index.hbs`, 'utf8');
     const compiler = base(settings, template);
 
-    mkdirp(`./${settings.outputFolder}`, function (err) {
-        if (err) {
-            return console.error(err);
-        };
-
-        function navRelevant(dirs) {
-            let children = [];
-            dirs.forEach((dir) => { children = children.concat(dir.children) });
-            if (children.length == 0) { return [] };
-            const childFiles = children.filter(c => !c.children);
-            const childDirs = children.filter(c => c.children);
-            const withoutParent = childDirs.filter((dir) => {
-                childFiles.forEach((file) => {
-                    const directory = file.path.split('/');
-                    directory.pop();
-                    if (directory.join('/') == dir.path) {
-                        return false;
-                    };
-                });
-
-                return true;
-            });
-
-            return childFiles.concat(navRelevant(withoutParent));
-        }
-
-        function generateRecursive(res, navTree) {
-            const pathArr : string[] = res.path.split('/');
-            const dir : string = pathArr.slice(1, pathArr.length).join('/');
-            const fullPath : string = dir ? settings.outputFolder + '/' + dir : settings.outputFolder;
-            const file : string = `./${fullPath}/index.html`;
-
-            mkdirp(fullPath, function (err) {
-                const files = res.children.filter(i => !i.children);
-                const dirs = res.children.filter(i => !!i.children);
-
-                let md : string = '';
-                files.forEach((file) => {
-                    const fileName : string = file.path;
-                    const fileContent : string = fs.readFileSync(fileName, 'utf8');
-                    md += `${fileContent}\n`;
-                    // console.log(`File ${fileName} loaded sucessfully`);
-                });
-
-                const parsed = compiler(md, assetsPath(pathArr), navTree);
-                if (files.length > 0) {
-                    const parseForNav = navRelevant(dirs);
-                    console.log(file);
-                    console.log(parseForNav);
-
-                    fs.writeFileSync(file, parsed.compile(), 'utf8')
-                    // console.log(`File ${file} was created`);
-                }
-
-                dirs.forEach((dir) => {
-                    generateRecursive(dir, parsed.getNavTree());
-                });
-            });
-        }
-
-        if (settings.recursive) {
-            fsHelper(settings, (err, res) => {
-                if (err) {
-                    return console.error(err);
-                }
-                generateRecursive(res, []);
-            });
-        } else {
+    if (settings.recursive) {
+        const recursive = generateRecursive(settings, compiler);
+        browser(settings, (err, res) => {
+            if (err) {
+                return console.error(err);
+            }
+            recursive(res, []);
+        });
+    } else {
+        mkdirp(`./${settings.outputFolder}`, function (err) {
+            if (err) {
+                return console.error(err);
+            };
 
             const file : string = `./${settings.outputFolder}/index.html`;
 
@@ -127,9 +67,9 @@ export default function(process) {
 
             fs.writeFileSync(file, compiler(md).compile(), 'utf8')
             console.log(`File ${file} was created`);
-        }
 
-    });
+        });
+    }
 
     // copy assets
     mkdirp(`./${settings.outputFolder}/assets`, function (err) {

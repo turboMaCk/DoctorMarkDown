@@ -10,7 +10,7 @@ export interface Parser {
     getTokens() : any;
     parseMenuTree() : Node[];
     parseContent() : string;
-    parseNavTree() : Node[];
+    parseNavTree(tree : Node[]) : Node[];
     getFileName() : string;
 }
 
@@ -24,7 +24,7 @@ export interface Frontend {
 
 
 export interface ParserFactory extends Function {
-    (options, raw : string, navTree) : Parser
+    (options, raw : string) : Parser
 }
 
 // @Private function for generating ids
@@ -48,7 +48,7 @@ function createNodeFromToken(token : Token, href? : string) : Node {
 
 // @Public Main constructor
 export default function (frontend : Frontend) : ParserFactory {
-    return (options, raw : string, navTree) : Parser => {
+    return (options, raw : string) : Parser => {
         let tokenized;
 
         const getTokens = () : any => {
@@ -63,7 +63,7 @@ export default function (frontend : Frontend) : ParserFactory {
             return frontend.parseContent(options, getTokens());
         };
 
-        const parseNavTree = () : Node[] => {
+        const parseNavTree = (navTree : Node[]) : Node[] => {
             return frontend.parseNavTree(options, navTree, getTokens());
         };
 

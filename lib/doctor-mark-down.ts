@@ -11,16 +11,25 @@ export interface Settings {
 
 export interface Compiler {
     compile() : string;
-    getNavTree() : Node[];
+    getFileName() : string;
+    compileWithNav(tree : Node[]) : CompileResult;
 }
 
-export default function (settings, template : string) {
+export interface CompilerFactory extends Function {
+    (raw : string, assetPath? : string) : Compiler
+}
+
+export interface CompileResult {
+    content : string;
+    navigation : Node[];
+}
+
+export default function (settings, template : string) : CompilerFactory {
     const compile = handlebars(settings, template);
 
-    return (raw : string, assetsPath? : string, navTree? : Node[]) : Compiler => {
-        navTree = navTree || [];
+    return (raw : string, assetsPath? : string) : Compiler => {
         assetsPath = assetsPath || 'assets';
-        const parser = marked(settings, raw, navTree);
+        const parser = marked(settings, raw);
 
         return {
             compile() : string {
@@ -28,11 +37,23 @@ export default function (settings, template : string) {
                     menu: menu(settings, parser.parseMenuTree()),
                     content: parser.parseContent(),
                     assetsPath: assetsPath,
-                    navigation: menu(settings, parser.parseNavTree())
+                    navigation: ''
                 });
             },
-            getNavTree() : Node[] {
-                return parser.parseNavTree();
+            getFileName() : string {
+                return parser.getFileName();
+            },
+            compileWithNav(NavTree : Node[]) : CompileResult {
+                const navigation = parser.parseNavTree(NavTree);
+                return {
+                    content: compile({
+                        menu: menu(settings, parser.parseMenuTree()),
+                        content: parser.parseContent(),
+                        assetsPath: assetsPath,
+                        navigation: menu(settings, navigation)
+                    }),
+                    navigation: navigation
+                }
             }
         }
     };
