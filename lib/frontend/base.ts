@@ -10,7 +10,6 @@ export interface Parser {
     getTokens() : any;
     parseMenuTree() : Node[];
     parseContent() : string;
-    parseNavTree(tree : Node[]) : Node[];
     getFileName() : string;
 }
 
@@ -18,7 +17,6 @@ export interface Frontend {
     tokenize(options, raw : string) : any;
     parseContent(options, tokens : any) : string;
     parseMenuTree(options, tokens : Token[]) : Node[];
-    parseNavTree(options, tree : Node[], tokens : Token[]) : Node[];
     getFileName(options, tokens : Token[]) : string;
 };
 
@@ -62,10 +60,6 @@ export default function (frontend : Frontend) : ParserFactory {
             return frontend.parseContent(options, getTokens());
         };
 
-        const parseNavTree = (navTree : Node[]) : Node[] => {
-            return frontend.parseNavTree(options, navTree, getTokens());
-        };
-
         const getFileName = () : string => {
             return frontend.getFileName(options, getTokens());
         };
@@ -74,7 +68,6 @@ export default function (frontend : Frontend) : ParserFactory {
             getTokens: getTokens,
             parseMenuTree: parseMenuTree,
             parseContent: parseContent,
-            parseNavTree: parseNavTree,
             getFileName: getFileName
         };
     }

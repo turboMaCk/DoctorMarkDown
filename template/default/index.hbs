@@ -10,7 +10,11 @@
   <nav class="nav">
     <section class="nav-content">
         <header>Content:</header>
-        {{{navigation}}}
+        {{#if navigation}}
+            {{{navigation}}}
+        {{else}}
+            {{{menu}}}
+        {{/if}}
     </section>
   </nav>
   <main class="main">

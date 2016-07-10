@@ -43,16 +43,15 @@ export default function (settings, template : string) : CompilerFactory {
             getFileName() : string {
                 return parser.getFileName();
             },
-            compileWithNav(NavTree : Node[]) : CompileResult {
-                const navigation = parser.parseNavTree(NavTree);
+            compileWithNav(navTree : Node[]) : CompileResult {
                 return {
                     content: compile({
                         menu: menu(settings, parser.parseMenuTree()),
                         content: parser.parseContent(),
                         assetsPath: assetsPath,
-                        navigation: menu(settings, navigation)
+                        navigation: menu(settings, navTree)
                     }),
-                    navigation: navigation
+                    navigation: navTree
                 }
             }
         }
