@@ -108,15 +108,14 @@ export function parseTree(options, tokens : Token[]) : Node[] {
     return tree;
 }
 
-export function pushDepthToTree(options, tree : Node[], tokens : Token[]) : Node[] {
-    if (!tokens || tokens.length == 0) return tree;
-    const nodes = tokens.map((token) => createNodeFromToken(token));
+export function pushDepthToTree(options, tree : Node[], nodes : Node[]) : Node[] {
+    if (!nodes || nodes.length == 0) return tree;
     if (tree.length < 1) {
         return nodes;
     }
     const deeper = tree.filter(i => i.children.length > 0);
     if (deeper.length > 0) {
-        tree.concat(pushDepthToTree(options, deeper[0].children, tokens));
+        tree.concat(pushDepthToTree(options, deeper[0].children, nodes));
         return tree;
     }
     tree[tree.length -1].children = nodes;
