@@ -10,9 +10,8 @@ export interface Settings {
 }
 
 export interface Compiler {
-    compile() : string;
+    compile(navTree? : Node[]) : string;
     getFileName() : string;
-    compileWithNav(tree : Node[]) : CompileResult;
 }
 
 export interface CompilerFactory extends Function {
@@ -32,27 +31,17 @@ export default function (settings, template : string) : CompilerFactory {
         const parser = marked(settings, raw);
 
         return {
-            compile() : string {
+            compile(navTree? : Node[]) : string {
+                navTree = navTree || [];
                 return compile({
                     menu: menu(settings, parser.parseMenuTree()),
                     content: parser.parseContent(),
                     assetsPath: assetsPath,
-                    navigation: ''
+                    navigation: menu(settings, navTree)
                 });
             },
             getFileName() : string {
                 return parser.getFileName();
-            },
-            compileWithNav(navTree : Node[]) : CompileResult {
-                return {
-                    content: compile({
-                        menu: menu(settings, parser.parseMenuTree()),
-                        content: parser.parseContent(),
-                        assetsPath: assetsPath,
-                        navigation: menu(settings, navTree)
-                    }),
-                    navigation: navTree
-                }
             }
         }
     };

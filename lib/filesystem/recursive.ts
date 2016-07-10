@@ -43,8 +43,8 @@ export default function(settings, compilerFactory : CompilerFactory) {
             mkdirp(dest, function (err) {
                 if (err) return console.log(err);
                 if (compiler) {
-                    const result = compiler.compileWithNav(newNavTree);
-                    fs.writeFileSync(dest + '/index.html', result.content, 'utf8');
+                    const content = compiler.compile(newNavTree);
+                    fs.writeFileSync(dest + '/index.html', content, 'utf8');
                 }
             });
         }
