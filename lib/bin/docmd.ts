@@ -47,7 +47,7 @@ export default function(process) {
             if (err) {
                 return console.error(err);
             }
-            recursive(res, []);
+            recursive(res);
         });
     } else {
         mkdirp(`./${settings.outputFolder}`, function (err) {
