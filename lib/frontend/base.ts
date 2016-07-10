@@ -108,6 +108,17 @@ export function parseTree(options, tokens : Token[]) : Node[] {
     return tree;
 }
 
+function findParent(tree : Node[], href : string) : Node {
+    const pathArr : string[] = href.split('/');
+    const parentPath : string = pathArr.slice(0, pathArr.length - 1).join('/');
+    const parent = tree.filter((i) => !!i.item.href.match(parentPath));
+
+    if (parent.length < 1) {
+        return findParent(tree, parentPath);
+    }
+    return parent[0];
+}
+
 export function pushDepthToTree(options, tree : Node[], nodes : Node[]) : Node[] {
     if (!nodes || nodes.length == 0) return tree;
     if (tree.length < 1) {
@@ -118,6 +129,9 @@ export function pushDepthToTree(options, tree : Node[], nodes : Node[]) : Node[]
         tree.concat(pushDepthToTree(options, deeper[0].children, nodes));
         return tree;
     }
-    tree[tree.length -1].children = nodes;
-    return tree.concat();
+    nodes.forEach((node) => {
+        const parent = findParent(tree, node.item.href);
+        parent.children.push(node);
+    })
+    return tree;
 }
