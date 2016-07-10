@@ -32,15 +32,16 @@ function idFromText(text : string) : string {
 }
 
 // @Public Node basic constructor
-export function createNode(text : string, href : string) : Node {
-    return { item: { text: text, href: href, depth: 1 },
+export function createNode(text : string, href : string, depth? : number) : Node {
+    depth = depth || 1;
+    return { item: { text: text, href: href, depth: depth },
              children: [] };
 }
 
 // @Private Node from Token constructor
 function createNodeFromToken(token : Token, href? : string) : Node {
     href = href || `#${idFromText(token.text)}`;
-    return createNode(token.text, href);
+    return createNode(token.text, href, token.depth);
 }
 
 // @Public Main constructor
