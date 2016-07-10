@@ -13,47 +13,47 @@ function assetsPath(pathArr : string[]) : string {
     return path;
 }
 
-function walk(settings, dirs : Fs[], compilerFactory : CompilerFactory, navTree : Node[], dest? : string, compiler? : Compiler) {
-    const nextLevel = dirs.map((d : Fs)=> {
-        const files = d.children.filter(c => !c.children);
-        const dirs = d.children.filter(c => !!c.children);
-        const pathArr : string[] = d.path.split('/');
-        const dir : string = pathArr.slice(1, pathArr.length).join('/');
-        const fullPath : string = dir ? settings.outputFolder + '/' + dir : settings.outputFolder;
+export default function(settings, compilerFactory : CompilerFactory) {
+    function walk(dirs : Fs[], navTree : Node[], dest? : string, compiler? : Compiler) : void {
+        const nextLevel = dirs.map((d : Fs)=> {
+            const files = d.children.filter(c => !c.children);
+            const dirs = d.children.filter(c => !!c.children);
+            const pathArr : string[] = d.path.split('/');
+            const dir : string = pathArr.slice(1, pathArr.length).join('/');
+            const fullPath : string = dir ? settings.outputFolder + '/' + dir : settings.outputFolder;
 
-        let md = '';
-        files.forEach((file) => {
-            const fileName : string = file.path;
-            const fileContent : string = fs.readFileSync(fileName, 'utf8');
-            md += `${fileContent}\n`;
+            let md = '';
+            files.forEach((file) => {
+                const fileName : string = file.path;
+                const fileContent : string = fs.readFileSync(fileName, 'utf8');
+                md += `${fileContent}\n`;
+            });
+
+            const compiler = compilerFactory(md, assetsPath(pathArr));
+            return {
+                compiler: compiler,
+                destination: fullPath,
+                fs: dirs
+            }
         });
+        const nav : Node[] = nextLevel.map(l => createNode(l.compiler.getFileName(), '/' + l.destination + '/index.html'));
+        const newNavTree : Node[] = pushDepthToTree(settings, navTree, nav);
 
-        const compiler = compilerFactory(md, assetsPath(pathArr));
-        return {
-            compiler: compiler,
-            destination: fullPath,
-            fs: dirs
+        if (dest) {
+            mkdirp(dest, function (err) {
+                if (err) return console.log(err);
+                if (compiler) {
+                    const result = compiler.compileWithNav(newNavTree);
+                    fs.writeFileSync(dest + '/index.html', result.content, 'utf8');
+                }
+            });
         }
-    });
-    console.log(dest);
-    const nav : Node[] = nextLevel.map(l => createNode(l.compiler.getFileName(), '/' + l.destination + '/index.html'));
-    const newNavTree : Node[] = pushDepthToTree(settings, navTree, nav);
-
-    if (compiler) {
-        mkdirp(dest, function (err) {
-            if (err) return console.log(err);
-            const result = compiler.compileWithNav(newNavTree);
-
-            fs.writeFileSync(dest + '/index.html', result.content, 'utf8');
+        nextLevel.forEach((l) => {
+            walk(l.fs, newNavTree, l.destination, l.compiler);
         });
     }
-    nextLevel.forEach((l) => {
-        walk(settings, l.fs, compilerFactory, newNavTree, l.destination, l.compiler);
-    });
-}
 
-export default function(settings, compilerFactory : CompilerFactory) {
-    return function generateRecursive(level : Fs) : void {
-        return walk(settings, [level], compilerFactory, []);
+    return function(level : Fs) : void {
+        walk([level], []);
     }
 }
