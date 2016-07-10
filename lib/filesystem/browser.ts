@@ -19,7 +19,7 @@ function createFsNode(dir : string, name? : string) : Fs {
     return { path: path };
 }
 
-function Tree(settings) : FsTree {
+export default function Tree(settings) : FsTree {
     function tree (dir : string, done : FsHandler) {
         let results : Fs = createFsNode(dir);
         results.children = [];
@@ -42,13 +42,18 @@ function Tree(settings) : FsTree {
             });
 
             list.forEach((file) => {
-                fs.stat(dir + '/' + file, (err, stat) => {
+                fs.stat(`${dir}/${file}`, (err, stat) => {
                     if (stat && stat.isDirectory()) {
                         // check if is ignored
                         if (settings.ignore.filter(name => name == file).length == 0) {
                             return tree(`${dir}/${file}`, (err, res) => {
                                 if (res.children.length > 0) {
-                                    results.children.push(res);
+                                    const childFiles = res.children.filter(i => !i.children);
+                                    if (childFiles.length > 0) {
+                                        results.children.push(res);
+                                    } else {
+                                        results.children = results.children.concat(res.children);
+                                    }
                                 }
 
                                 if (!--pending) {
@@ -67,8 +72,3 @@ function Tree(settings) : FsTree {
 
     return tree;
 }
-
-export default function(settings, done) {
-    const tree = Tree(settings);
-    tree('.', done);
-};

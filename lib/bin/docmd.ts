@@ -6,14 +6,13 @@ import thePessimist from 'thepessimist';
 import fs = require('fs');
 import mkdirp = require('mkdirp');
 import ncp = require('ncp');
-import browser from '../filesystem/browser';
+import Browser from '../filesystem/browser';
 import generateRecursive from '../filesystem/recursive';
 
 const dirArray : string[] = __dirname.split('/');
 // remove dist/lib/bin/
 ['dist', 'lib', 'bin'].forEach(dir => dirArray.pop());
 const baseDir : string = dirArray.join('/');
-
 
 export const defaultSettings = {
     recursive: true,
@@ -38,13 +37,13 @@ export default function(process) {
 
     // parse settings
     const settings = thePessimist(defaultSettings, process.argv, shortcuts);
-
     const template = fs.readFileSync(`${settings.template}/index.hbs`, 'utf8');
     const compiler = base(settings, template);
+    const browser = Browser(settings);
 
     if (settings.recursive) {
         const recursive = generateRecursive(settings, compiler);
-        browser(settings, (err, res) => {
+        browser('.', (err, res) => {
             if (err) {
                 return console.error(err);
             }

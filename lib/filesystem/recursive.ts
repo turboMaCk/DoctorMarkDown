@@ -65,7 +65,7 @@ export default function(settings, compiler : CompilerFactory) {
             if (files.length > 0) {
                 // writeFile(settings, dirs, parsed, file);
                 const parseForNav : Fs[] = navRelevant(settings, dirs);
-                console.log(parseForNav, parsed.getFileName());
+                // console.log(parseForNav, parsed.getFileName());
 
                 const { content, navigation } = parsed.compileWithNav(navTree);
                 // console.log(navigation);
