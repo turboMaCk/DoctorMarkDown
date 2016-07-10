@@ -36,11 +36,8 @@ function walk(settings, dirs : Fs[], compilerFactory : CompilerFactory, navTree 
         }
     });
     console.log(dest);
-    console.log('sd', navTree);
     const nav : Node[] = nextLevel.map(l => createNode(l.compiler.getFileName(), '/' + l.destination + '/index.html'));
     const newNavTree : Node[] = pushDepthToTree(settings, navTree, nav);
-    console.log(newNavTree);
-    console.log('=============')
 
     if (compiler) {
         mkdirp(dest, function (err) {
@@ -50,7 +47,6 @@ function walk(settings, dirs : Fs[], compilerFactory : CompilerFactory, navTree 
             fs.writeFileSync(dest + '/index.html', result.content, 'utf8');
         });
     }
-
     nextLevel.forEach((l) => {
         walk(settings, l.fs, compilerFactory, newNavTree, l.destination, l.compiler);
     });

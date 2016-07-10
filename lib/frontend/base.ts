@@ -119,5 +119,5 @@ export function pushDepthToTree(options, tree : Node[], nodes : Node[]) : Node[]
         return tree;
     }
     tree[tree.length -1].children = nodes;
-    return tree;
+    return tree.concat();
 }
