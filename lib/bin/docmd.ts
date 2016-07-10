@@ -15,7 +15,7 @@ const dirArray : string[] = __dirname.split('/');
 const baseDir : string = dirArray.join('/');
 
 export const defaultSettings = {
-    recursive: true,
+    recursive: false,
     skipFirstHeadline: false,
     files: ['README.md'],
     outputFolder: 'documentation',
