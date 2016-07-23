@@ -9,6 +9,38 @@ export interface Node {
     children : Node[];
 }
 
+function diffPath(reference : string, path : string) : { add : string[], miss: string[] } {
+    const refArr : string[] = reference.split('/').filter(i => i != 'index.html');
+    const pathArr : string[] = path.split('/').filter(i => i != 'index.html');
+    let add : string[] = [];
+    let miss : string[] = [];
+
+    refArr.forEach((part : string, i : number) => {
+        const inPath = pathArr[i];
+        if (!inPath && !!part) {
+            miss.push(part);
+        } else if (part !== inPath)  {
+            miss.push(part);
+            add.push(inPath);
+        }
+    });
+
+    add = add.concat(pathArr.slice(refArr.length));
+
+    return { add, miss };
+}
+
+function resolveHref(setting, nodeHref : string, path? : string) : string {
+    if (!path) return nodeHref;
+
+    const diff = diffPath(path, nodeHref);
+    let str : string = '';
+    diff.miss.forEach(_ => str += '../');
+    diff.add.forEach(path => str += `${path}/`);
+    str += 'index.html';
+    return str;
+}
+
 // TODO:
 // This is just initial basic implementation. Consider following improvements:
 //     - Use tail recursion for better performance
@@ -21,10 +53,11 @@ export default function generateMenu(setting, tree : Node[], path? : string) : s
         let parsedChildren : string = '';
 
         if (node.children.length > 0) {
-            parsedChildren = generateMenu(setting, node.children);
+            parsedChildren = generateMenu(setting, node.children, path);
         }
 
-        return `<li><a href="${node.item.href}">${node.item.text}</a>\n${parsedChildren}</li>\n`;
+        const href = resolveHref(setting, node.item.href, path);
+        return `<li><a href="${href}">${node.item.text}</a>\n${parsedChildren}</li>\n`;
     });
 
     return `<ul>\n${items.join('\n')}</ul>`;

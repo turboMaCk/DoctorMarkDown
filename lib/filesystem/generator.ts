@@ -43,9 +43,9 @@ export default function(settings, compilerFactory : CompilerFactory) {
             mkdirp(dest, (err) => {
                 if (err) return console.log(err);
                 if (compiler) {
-                    const content = compiler.compile(newNavTree);
-                    fs.writeFileSync(dest + '/index.html', content, 'utf8');
-                    fs.writeFile(`${dest}/index.html`, content, 'utf8', (err) => {
+                    const filePath = `${dest}/index.html`;
+                    const content = compiler.compile({ navTree: newNavTree, path: `/${filePath}` });
+                    fs.writeFile(filePath, content, 'utf8', (err) => {
                         if (err) return console.error(err);
                         nextLevel.forEach((l) => {
                             walk(l.fs, newNavTree, l.destination, l.compiler);
