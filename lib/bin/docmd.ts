@@ -1,13 +1,10 @@
 /// <reference path="../../header_files/node.d.ts" />
-/// <reference path="../../header_files/mkdirp.d.ts" />
-/// <reference path="../../header_files/ncp.d.ts" />
 import base from '../doctor-mark-down';
 import thePessimist from 'thepessimist';
 import fs = require('fs');
-import mkdirp = require('mkdirp');
-import ncp = require('ncp');
 import Browser from '../filesystem/browser';
-import generateRecursive from '../filesystem/recursive';
+import generatorFactory from '../filesystem/generator';
+import copyAssets from '../filesystem/copy-assets';
 
 const dirArray : string[] = __dirname.split('/');
 // remove dist/lib/bin/
@@ -41,45 +38,11 @@ export default function(process) {
     const compiler = base(settings, template);
     const browser = Browser(settings);
 
-    if (settings.recursive) {
-        const recursive = generateRecursive(settings, compiler);
-        browser('.', (err, res) => {
-            if (err) {
-                return console.error(err);
-            }
-            recursive(res);
-        });
-    } else {
-        mkdirp(`./${settings.outputFolder}`, function (err) {
-            if (err) {
-                return console.error(err);
-            };
-
-            const file : string = `./${settings.outputFolder}/index.html`;
-
-            let md : string = '';
-            settings.files.forEach((fileName) => {
-                const fileContent : string = fs.readFileSync(fileName, 'utf8');
-                md += `${fileContent}\n`;
-                console.log(`File ${fileName} loaded sucessfully`);
-            });
-
-            fs.writeFileSync(file, compiler(md).compile(), 'utf8')
-            console.log(`File ${file} was created`);
-
-        });
-    }
-
-    // copy assets
-    mkdirp(`./${settings.outputFolder}/assets`, function (err) {
-        if (err) {
-            return console.error(err);
-        };
-        ncp.ncp('template/default/assets', `./${settings.outputFolder}/assets`, function (err) {
-            if (err) {
-                return console.error(err);
-            }
-            console.log('Assets copied sucesfully');
-        });
+    const generator = generatorFactory(settings, compiler);
+    browser('.', (err, res) => {
+        if (err) return console.error(err);
+        generator(res);
     });
+
+    copyAssets(settings);
 };

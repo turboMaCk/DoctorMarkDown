@@ -32,7 +32,7 @@ export default function (settings, template : string) : CompilerFactory {
 
         return {
             compile(navTree? : Node[]) : string {
-                navTree = navTree || [];
+                navTree = settings.recursive ? navTree : [];
                 return compile({
                     menu: menu(settings, parser.parseMenuTree()),
                     content: parser.parseContent(),

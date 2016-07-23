@@ -43,7 +43,7 @@ export default function Tree(settings) : FsTree {
 
             list.forEach((file) => {
                 fs.stat(`${dir}/${file}`, (err, stat) => {
-                    if (stat && stat.isDirectory()) {
+                    if (stat && stat.isDirectory() && settings.recursive) {
                         // check if is ignored
                         if (settings.ignore.filter(name => name == file).length == 0) {
                             return tree(`${dir}/${file}`, (err, res) => {

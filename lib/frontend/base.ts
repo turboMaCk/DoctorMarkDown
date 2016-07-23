@@ -90,11 +90,9 @@ export function parseTree(options, tokens : Token[]) : Node[] {
             return tree.push(createNodeFromToken(token));
         };
 
-        do {
-            let whileCond : boolean = ancestor.children.length !== 0 && ancestor.children[ancestor.children.length - 1].item.depth < token.depth;
-            if (!whileCond) { break; }
-            ancestor = ancestor.children[ ancestor.children.length-1 ]
-        } while (true)
+        while (ancestor.children.length !== 0 && ancestor.children[ancestor.children.length - 1].item.depth < token.depth) {
+            ancestor = ancestor.children[ ancestor.children.length-1 ];
+        };
 
         ancestor.children.push(createNodeFromToken(token));
     });
