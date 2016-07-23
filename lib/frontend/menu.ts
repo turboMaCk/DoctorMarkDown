@@ -14,7 +14,7 @@ export interface Node {
 //     - Use tail recursion for better performance
 //     - Add escaping to prevent XSS
 //     - Add path to params and check is active && active parent classes
-export default function generateMenu(setting, tree : Node[]) : string {
+export default function generateMenu(setting, tree : Node[], path? : string) : string {
     if (tree.length < 1) return '';
 
     const items : string[] = tree.map((node) => {

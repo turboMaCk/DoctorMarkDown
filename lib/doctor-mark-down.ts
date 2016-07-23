@@ -9,8 +9,13 @@ export interface Settings {
     depth: string;
 }
 
+export interface NavAndPath {
+    navTree : Node[];
+    path : string;
+}
+
 export interface Compiler {
-    compile(navTree? : Node[]) : string;
+    compile(NavAndPath) : string;
     getFileName() : string;
 }
 
@@ -31,13 +36,14 @@ export default function (settings, template : string) : CompilerFactory {
         const parser = marked(settings, raw);
 
         return {
-            compile(navTree? : Node[]) : string {
-                navTree = settings.recursive ? navTree : [];
+            compile(navParams? : NavAndPath) : string {
+                const navTree = settings.recursive && navParams ? navParams.navTree : [];
+                const path = settings.recursive && navParams ? navParams.path : undefined;
                 return compile({
                     menu: menu(settings, parser.parseMenuTree()),
                     content: parser.parseContent(),
                     assetsPath: assetsPath,
-                    navigation: menu(settings, navTree)
+                    navigation: menu(settings, navTree, path)
                 });
             },
             getFileName() : string {

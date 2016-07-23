@@ -16,7 +16,7 @@ export default describe('menu html generator', () => {
             '<li><a href="#third">third</a>\n</li>\n' +
             '</ul>';
 
-        expect(generateMenu({}, tree)).toEqual(html);
+        expect(generateMenu({}, tree, '')).toEqual(html);
     });
 
     it('should generate newsted menu', () => {
@@ -35,6 +35,6 @@ export default describe('menu html generator', () => {
             '</ul></li>\n' +
             '</ul>';
 
-        expect(generateMenu({}, tree)).toEqual(html);
+        expect(generateMenu({}, tree, '')).toEqual(html);
     });
 });
