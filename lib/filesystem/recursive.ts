@@ -40,17 +40,24 @@ export default function(settings, compilerFactory : CompilerFactory) {
         const newNavTree : Node[] = pushDepthToTree(settings, navTree, nav);
 
         if (dest) {
-            mkdirp(dest, function (err) {
+            mkdirp(dest, (err) => {
                 if (err) return console.log(err);
                 if (compiler) {
                     const content = compiler.compile(newNavTree);
                     fs.writeFileSync(dest + '/index.html', content, 'utf8');
+                    fs.writeFile(`${dest}/index.html`, content, 'utf8', (err) => {
+                        if (err) return console.error(err);
+                        nextLevel.forEach((l) => {
+                            walk(l.fs, newNavTree, l.destination, l.compiler);
+                        });
+                    })
                 }
             });
+        } else {
+            nextLevel.forEach((l) => {
+                walk(l.fs, newNavTree, l.destination, l.compiler);
+            });
         }
-        nextLevel.forEach((l) => {
-            walk(l.fs, newNavTree, l.destination, l.compiler);
-        });
     }
 
     return function(level : Fs) : void {
