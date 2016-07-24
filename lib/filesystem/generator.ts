@@ -36,7 +36,8 @@ export default function(settings, compilerFactory : CompilerFactory) {
                 fs: dirs
             }
         });
-        const nav : Node[] = nextLevel.map(l => createNode(l.compiler.getFileName(), '/' + l.destination + '/index.html'));
+
+        const nav : Node[] = nextLevel.map(l => createNode(l.compiler.getFileName(), `/${l.destination}/index.html`));
         const newNavTree : Node[] = pushDepthToTree(settings, navTree, nav);
 
         if (dest) {
@@ -45,6 +46,7 @@ export default function(settings, compilerFactory : CompilerFactory) {
                 if (compiler) {
                     const filePath = `${dest}/index.html`;
                     const content = compiler.compile({ navTree: newNavTree, path: `/${filePath}` });
+
                     fs.writeFile(filePath, content, 'utf8', (err) => {
                         if (err) return console.error(err);
                         nextLevel.forEach((l) => {

@@ -111,14 +111,28 @@ function findParent(tree : Node[], href : string) : Node {
     return parent[0];
 }
 
+function copyLevel(tree : Node[]) : Node[] {
+    return tree.map(i => {
+        return {
+            item: {
+                text: i.item.text,
+                depth: i.item.depth,
+                href: i.item.href
+            },
+            children: i.children.slice()
+        }
+    });
+}
+
 export function pushDepthToTree(options, tree : Node[], nodes : Node[]) : Node[] {
-    if (!nodes || nodes.length == 0) return tree;
+    if (!nodes || nodes.length == 0) return tree.slice();
     if (tree.length < 1) {
-        return nodes;
+        return nodes.slice();
     }
+    tree = copyLevel(tree);
     const deeper = tree.filter(i => i.children.length > 0);
     if (deeper.length > 0) {
-        tree.concat(pushDepthToTree(options, deeper[0].children, nodes));
+        deeper[0].children = pushDepthToTree(options, deeper[0].children, nodes);
         return tree;
     }
     nodes.forEach((node) => {
