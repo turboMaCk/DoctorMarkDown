@@ -70,40 +70,4 @@ All settings are optional. Anyway you should use them to overwrite default value
 | `--template` | `-t` | `default` | Path to template
 | `--ignore` | `-i` | `node_modules .git documentation, bower_components` | Ignored directories
 
-### Creating custom template
-
-[Default](template/default) template not other is provided via options. For now the only handlebars backend is provided.
-Anyway by design it should be pretty easy to extend current functionality with support for various different templating languages.
-
-There are only two requirements for creating your own template for **Docktor Mark Down**. Every template should contain `index.hbs` file
-and `assets` folder with all other assets.
-
-You can create new template directly in your project. For example create folder `documentation_template`. Like this:
-
-```shell
-documentation_template
- |- assets
- |  |- style.css
- |- index.hbs
-```
-
-There are two dynamic parts currently provided by parser - `menu` and `content`.
-The really simple `index.html` then can look like for example this:
-
-```handlebars
-<!doctype html>
-<html>
-<body>
-  <nav>{{{menu}}}</nav>
-  <main>{{content}}</main>
-</body>
-</html
-```
-
-You can then compile documentation using your custom template by running:
-
-```shell
-docmd --template docuemntation_template
-# or
-docmd --t docuemntation_template
-```
+You can find instructions for template creation [here](template)
