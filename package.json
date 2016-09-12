@@ -1,12 +1,12 @@
 {
   "name": "doctor-mark-down",
   "version": "0.0.1",
-  "description": "",
+  "description": "Markdown to HTML documentation compiler which you don't know about.",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/typescript/bin/tsc ./spec/all-spec.ts --outDir ./spec/compiled && ./node_modules/jasmine/bin/jasmine.js",
     "build": "./node_modules/typescript/bin/tsc ./lib/bin/docmd.ts --outDir ./dist --pretty",
-    "start": "npm run build && ./bin/docmd --recursive --files README.md CONTRIBUTING.md",
+    "start": "npm run build && ./bin/docmd --recursive --files README.md CONTRIBUTING.md LICENSE",
     "doc": "npm start && cp -R ./documentation/* ./"
   },
   "repository": {
@@ -18,10 +18,10 @@
     "doc",
     "mark",
     "down",
-    "genrator"
+    "generator"
   ],
   "author": "Marek Fajkus <marek.faj@gmail.com>",
-  "license": "GPL-2.0",
+  "license": "MIT",
   "bin": {
     "docmd": "bin/docmd"
   },

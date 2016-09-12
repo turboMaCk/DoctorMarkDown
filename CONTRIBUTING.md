@@ -45,3 +45,19 @@ and use builded `bin/docmd` for generating documentation:
 ```shell
 npm start
 ```
+
+## Improvements I Can Think of...
+
+- [ ] Assets supprt
+  - [ ] Custom parser for links
+  - [ ] Linked assets copying
+- [ ] Improve links parsing
+  - [ ] Link `/index.html` to make links work without server
+- [ ] Passing start path within cmd line (like `docmd ~/somewhere`)
+- [ ] Configuration file
+  - [ ] Fs (levels up) looker for config file
+  - [ ] Load options from config file (`.docmd.rc` / `docmd.json`...)
+  - [ ] Custom footers/names and other meta (loaded from)
+- [ ] Pass datastructure instead of HTML to navigation and menu
+  - [ ] Some recursive `menu-item` helper?
+  - [ ] Add state to manu item (`acessor` & `active` flags)

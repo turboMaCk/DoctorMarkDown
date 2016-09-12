@@ -28,9 +28,9 @@ documentation_template
 You can then compile documentation using your custom template by running:
 
 ```shell
-docmd --template docuemntation_template
+docmd --template documentation_template
 # or
-docmd --t docuemntation_template
+docmd --t documentation_template
 ```
 
 ## Api
