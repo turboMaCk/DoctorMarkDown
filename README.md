@@ -12,7 +12,7 @@ some of them are pretty similar and differs only in features, API or implementat
 that I missed the tool which fits my needs for some of my projects or projects I came across with my coleagues & collaborators.
 Documentation should be both accesible (think about easy HTML compilation) and easy to maintain (think about keeping it up to date with your project).
 
-### How is Doctor Mark Down do NOT Works
+### How Doctor Mark Down do NOT Works
 
 The most common solution is generate documentation directly from source files using its comments.
 This approach has its advantages and disadvantages. The good thing is that documentation lives directly besides source code it refers to.
@@ -36,7 +36,7 @@ about both structure of your modules and your documentation. It's also harder to
 if some implementation changes. Also links in your documentation does not corespond with structure of your code anymore
 and you loose the benefit of easy accessibility for developers working with source directly.
 
-### How is Doctor Mark Down Works
+### How Doctor Mark Down Works
 
 **Doctor Mark Down** is not better in any of these categories but it comes with reasonable compromise between both.
 Its approch is simple. It **uses markdown files** instead of comments but these files live beside actuall implementation.
