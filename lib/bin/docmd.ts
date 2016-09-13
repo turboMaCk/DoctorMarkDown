@@ -15,7 +15,7 @@ export const defaultSettings = {
     recursive: false,
     skipFirstHeadline: false,
     files: ['README.md'],
-    outputFolder: 'documentation',
+    outputFolder: 'docs',
     depth: '6',
     template: `${baseDir}/template/default`,
     ignore: ['node_modules', '.git', 'documentation', 'bower_components']

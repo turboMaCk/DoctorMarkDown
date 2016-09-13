@@ -75,7 +75,7 @@ All options are optional. Anyway you should use them to overwrite default values
 | `--recursive` | `-r` | `off` | Recursive mode
 | `--files` | `-f`| `["README.md"]` | List of source files
 | `--skip-first-headline` | `-s` | `false` | Skip first headline in menu tree (only for non recursive)
-| `--out-folder` | `-o` | `"documentation"` | Compiled files will be stored to this folder
+| `--out-folder` | `-o` | `"docs"` | Compiled files will be stored to this folder
 | `--depth` | `-d` | `6` | Depth limit of navigation tree (only for non recursive)
 | `--template` | `-t` | `default` | Path to template
 | `--ignore` | `-i` | `node_modules .git documentation, bower_components` | Ignored directories
