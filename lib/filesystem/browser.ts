@@ -6,18 +6,19 @@ export interface Fs {
     children?: Fs[];
 };
 
+
 export interface FsHandler extends Function {
     (err, tree? : Fs);
 };
 
 export interface FsTree extends Function {
     (dir : string, done : FsHandler) : void;
-}
+};
 
 function createFsNode(dir : string, name? : string) : Fs {
     const path = !!name ? `${dir}/${name}` : dir;
     return { path: path };
-}
+};
 
 export default function Tree(settings) : FsTree {
     function tree (dir : string, done : FsHandler) {
@@ -68,7 +69,7 @@ export default function Tree(settings) : FsTree {
                 });
             });
         });
-    }
+    };
 
     return tree;
-}
+};

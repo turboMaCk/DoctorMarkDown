@@ -46,9 +46,11 @@ export default function(settings, compilerFactory : CompilerFactory) {
                 if (compiler) {
                     const filePath = `${dest}/index.html`;
                     const content = compiler.compile({ navTree: newNavTree, path: `/${filePath}` });
+                    console.log(`File ${filePath} was sucesscully compiled.`)
 
                     fs.writeFile(filePath, content, 'utf8', (err) => {
                         if (err) return console.error(err);
+                        console.log(`File ${filePath} was sucesscully written.`)
                         nextLevel.forEach((l) => {
                             walk(l.fs, newNavTree, l.destination, l.compiler);
                         });
